@@ -1,7 +1,6 @@
 @import url(./vendor/fonts/index.css);
 @import 'tailwindcss';
 
-
 @theme {
   /* --font-inter-sans: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
 }
@@ -49,6 +48,6 @@
     --root-primary-txt-color: #0c1317;
     --root-secondary-txt-color: #222e35;
     --root-primary-bg-color: rgb(255, 255, 255);
-    --root-secondary-bg-color: rgb(134, 150, 160);
+    --root-secondary-bg-color: rgb(220 241 253);
   }
 }
