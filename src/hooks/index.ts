@@ -1,0 +1,1 @@
+export { useContactUrlAvatar } from './useContactUrlAvatar';

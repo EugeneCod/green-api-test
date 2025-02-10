@@ -1,24 +1,36 @@
-/* import { useState } from 'react'; */
-import { FormInput } from '@/components/shared';
-import { Button } from '@/components/ui';
+import { useState, useContext } from 'react';
+import { Container, Preloader } from '@/components/shared';
+import { ChatWindow, Contacts, ControlPanel, LogInModal } from '@/modules';
+import { BriefInfoContact } from '@/@types/green-api';
+import { InstanceContext } from './contexts';
 
 function App() {
-  /* const [loggedIn, setLoggenIn] = useState(false); */
-  return (
-    <div className="bg-primary-bg">
-      {/* register page */}
-      <div className={`fixed inset-0 flex justify-center items-center`}>
-        <div className="w-100 bg-secondary-bg rounded-md p-8">
-          <h1 className="text-2xl font-bold mb-2 text-center">Вход</h1>
-          <p className="mb-2 text-center">Введите свои учетные данные из системы GREEN-API</p>
-          <div className="flex flex-col gap-y-3 pb-8">
-            <FormInput  label="idInstance" />
-            <FormInput label="apiTokenInstance" />
-          </div>
-          <Button>Отправить</Button>
+  const [selectedContact, setSelectedContact] = useState<BriefInfoContact | null>(null);
+
+  const instanceContext = useContext(InstanceContext);
+
+  if (instanceContext?.instanceChecking) {
+    return (
+      <main className="bg-primary-bg">
+        <div className={`fixed inset-0 flex justify-center items-center`}>
+          <Preloader />
         </div>
-      </div>
-    </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="bg-primary-bg">
+      {!instanceContext?.registrationData ? (
+        <LogInModal />
+      ) : (
+        <Container className="grid grid-cols-[min-content_minmax(350px,_1fr)_minmax(350px,_2fr)] min-h-screen">
+          <ControlPanel />
+          <Contacts selectedContact={selectedContact} onSelectContact={setSelectedContact} />
+          <ChatWindow contact={selectedContact} />
+        </Container>
+      )}
+    </main>
   );
 }
 
