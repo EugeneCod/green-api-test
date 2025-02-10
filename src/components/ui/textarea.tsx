@@ -31,7 +31,7 @@ export const Textarea = (props: TextareaProps) => {
   return (
     <textarea
       className={
-        'bg-secondary-bg-diff rounded-md text-input resize-none p-1 w-full outline-0 border border-transparent hover:border-emerald-600 focus:shadow-[0_0_4px_rgb(125,125,125)] placeholder-secondary-txt'
+        'bg-secondary-bg-diff rounded-md text-input resize-none p-1 w-full outline-0 border border-transparent hover:border-emerald-600 focus:shadow-[0_0_4px_rgb(125,125,125)] placeholder-secondary-txt overflow-hidden'
       }
       ref={textareaRef}
       onChange={handleChange}

@@ -10,6 +10,13 @@ export interface BriefInfoContact {
   name: string;
 }
 
+export interface ChatHistoryItem {
+  type: 'outgoing' | 'incoming';
+  timestamp: number;
+  textMessage: string;
+  idMessage: string;
+}
+
 export interface RegistrationData {
   idInstance: string;
   apiTokenInstance: string;

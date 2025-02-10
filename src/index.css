@@ -14,16 +14,20 @@
   --color-secondary-bg-diff: var(--root-secondary-bg-color-diff);
   --color-chat-mask: var(--root-color-chat-mask);
   --color-input: var(--root-color-input);
+  --color-message-in-bg: var(--root-message-in-bg-color);
+  --color-message-out-bg: var(--root-message-out-bg-color);
 }
 
 :root {
-  --root-primary-txt-color: rgb(255, 255, 255);
+  --root-primary-txt-color: rgb(228, 228, 228);
   --root-secondary-txt-color: rgb(134, 150, 160);
   --root-primary-bg-color: #0c1317;
   --root-secondary-bg-color: #222e35;
   --root-secondary-bg-color-diff: #2a3942;
   --root-color-chat-mask: rgba(0, 0, 0, 0.85);
   --root-color-input: rgb(209, 215, 219);
+  --root-message-in-bg-color: rgb(32, 44, 51);
+  --root-message-out-bg-color: rgb(0, 92, 75);
 
   font-family: 'SF Pro Text', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
@@ -51,5 +55,7 @@ body {
     --root-secondary-bg-color: rgb(235, 247, 254);
     --root-color-chat-mask: rgba(240, 243, 35, 0.3);
     --root-color-input: rgb(59, 74, 84);
+    --root-message-in-bg-color: rgb(255, 255, 255);
+    --root-message-out-bg-color: rgb(217, 253, 211);
   }
 }
