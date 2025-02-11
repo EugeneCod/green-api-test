@@ -59,6 +59,7 @@ export const LogInModal = () => {
             onChange={(evt) => {
               setApiTokenInstanceValue(evt.target.value);
             }}
+            type='password'
           />
         </div>
         <div className="text-xs text-red-600 min-h-4 pb-2">{errorMessage}</div>
@@ -67,35 +68,3 @@ export const LogInModal = () => {
     </div>
   );
 };
-
-/* 
-function handleLogin(email, password) {
-  setIsLoading(true);
-  login(email, password)
-    .then((res) => {
-      getUserInfo()
-        .then((userData) => {
-          setCurrentUser(userData);
-          getSavedMovies()
-            .then((moviesData) => {
-              setSavedMovies(moviesData);
-            })
-            .catch((err) => console.log(`${err} при загрузке сохраненных фильмов`));
-        })
-        .catch((err) => console.log(`${err} при загрузке данных о текущем пользователе`));
-      localStorage.setItem('preauthorization', JSON.stringify(true));
-      setLoggedIn(true);
-      navigate(ROUTES.MOVIES);
-      setLoginErrorMessage('');
-    })
-    .catch((err) => {
-      setLoginErrorMessage(
-        err.status === 401
-          ? AUTH_ERROR_MESSAGES.INCORRECT_EMAIL_OR_PASSWORD
-          : AUTH_ERROR_MESSAGES.UNIDENTIFIED,
-      );
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
-} */

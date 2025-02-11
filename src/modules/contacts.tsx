@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserPlusIcon } from 'lucide-react';
 
 import { ContactListItem, FormInput } from '@/components/shared';
@@ -33,13 +33,15 @@ export const Contacts = (props: ContactsProps) => {
     return `${code} ${operator} ${startGroup}-${middleGroup}-${endGroup}`;
   }
 
-  const getPhoneNumberFromId = useCallback((id: string) => {
+  /* Нет необходимости в рамках задания */
+  /* const getPhoneNumberFromId = useCallback((id: string) => {
     const number = id.split('@')[0];
 
     return convertPhoneNumber(number);
-  }, []);
+  }, []); */
 
-  useEffect(() => {
+  
+  /* useEffect(() => {
     if (instanceContext?.registrationData) {
       Api.contacts
         .getAll(instanceContext.registrationData)
@@ -55,29 +57,49 @@ export const Contacts = (props: ContactsProps) => {
         })
         .catch(console.error);
     }
-  }, [instanceContext?.registrationData, getPhoneNumberFromId]);
+  }, [instanceContext?.registrationData, getPhoneNumberFromId]); */
 
-  function handleAddContact() {
-    /* TODO добавить проверку контакта */
-    const newContact: BriefInfoContact = {
-      id: contactPhoneValue + PERSONAL_CHAT_ID_ENDING,
-      phoneNumber: convertPhoneNumber(contactPhoneValue),
-      name: '',
-    };
-    if (contacts.some((contact) => contact.id === newContact.id)) {
+  async function handleAddContact() {
+    if (!instanceContext?.registrationData || contactPhoneValue.length < 11) {
+      return;
+    }
+    const phoneNumber = +contactPhoneValue;
+    if (!isFinite(phoneNumber)) {
+      return;
+    }
+    const newContactId = contactPhoneValue + PERSONAL_CHAT_ID_ENDING;
+    if (contacts.some((contact) => contact.id === newContactId)) {
       return;
     }
 
-    setContacts([...contacts, newContact]);
-    setContactPhoneValue('');
+    try {
+      const existsWhatsapp = await Api.contacts.checkWhatsapp(
+        instanceContext.registrationData,
+        phoneNumber,
+      );
+      if (!existsWhatsapp) {
+        throw new Error('Нет аккаунта WhatsApp на номере телефона');
+      }
+      const newContact: BriefInfoContact = {
+        id: contactPhoneValue + PERSONAL_CHAT_ID_ENDING,
+        phoneNumber: convertPhoneNumber(contactPhoneValue),
+        name: '',
+      };
+
+      setContacts([...contacts, newContact]);
+      setContactPhoneValue('');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
-    <div className="flex flex-col pt-4">
+    <div className="flex flex-col pt-4 h-screen">
       <h1 className="text-2xl font-bold mb-2 px-2">Контакты</h1>
       {/* Добавление контактов */}
       <p className="text-secondary-txt text-xs mb-2 px-2">
-        Номер телефона в международном формате: 11 или 12 цифр; Пример: 79008007060 или 380123456789
+        Для добавления контакта укажите номер телефона в международном формате: 11 или 12 цифр;
+        Пример: 79008007060 или 380123456789
       </p>
 
       <form
@@ -103,7 +125,7 @@ export const Contacts = (props: ContactsProps) => {
       </form>
 
       {/* Список контактов */}
-      <ul>
+      <ul className="flex-auto overflow-y-scroll">
         {contacts.map((contact) => (
           <ContactListItem
             key={contact.id}

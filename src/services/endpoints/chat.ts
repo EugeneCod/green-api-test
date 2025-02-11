@@ -13,20 +13,21 @@ export const getChatHistory = async (
     data: { chatId, count: 10 },
     transformResponse: (data: string) => {
       const parsedData: ChatHistoryDTO[] = JSON.parse(data);
-      console.log(parsedData);
       const chatHistory = parsedData
-
         .filter(
           (item) =>
             item.typeMessage === 'textMessage' || item.typeMessage === 'extendedTextMessage',
         )
-        .map(({ type, timestamp, textMessage, idMessage }) => ({ type, timestamp, textMessage, idMessage }))
+        .map(({ type, timestamp, textMessage, idMessage }) => ({
+          type,
+          timestamp,
+          textMessage,
+          idMessage,
+        }))
         .reverse();
       return chatHistory;
     },
   });
-  console.log('data возвращаемая', data);
-
   return data;
 };
 
@@ -42,4 +43,3 @@ export const sendMessage = async (
 
   return data.idMessage;
 };
-

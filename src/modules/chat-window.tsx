@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import deafaultUserAvatar from '@/assets/icons/default-user.svg';
 import { cn } from '@/lib/utils/cn';
 
-/* import type { Message } from '@/@types/green-api'; */
 import { ChatTextarea, MessageListItem } from '@/components/shared';
 import { BriefInfoContact, ChatHistoryItem } from '@/@types/green-api';
 import { useContactUrlAvatar } from '@/hooks';
@@ -18,6 +17,7 @@ export const ChatWindow = (props: ChatWindowProps) => {
   const { contact } = props;
   const [currentMessageValue, setCurrentMessageValue] = useState('');
   const [messages, setMessages] = useState<ChatHistoryItem[]>([]);
+  const [isFetchingNotification, setIsFetchingNotification] = useState(false);
 
   const instanceContext = useContext(InstanceContext);
 
@@ -34,6 +34,59 @@ export const ChatWindow = (props: ChatWindowProps) => {
     }
   }, [contact, instanceContext?.registrationData]);
 
+  useEffect(() => {
+    async function fetchNotification() {
+      if (!instanceContext?.registrationData || !contact || isFetchingNotification) {
+        return;
+      }
+      setIsFetchingNotification(true);
+      try {
+        const data = await Api.notifications.receiveNotification(
+          instanceContext.registrationData,
+          10,
+        );
+        if (
+          data &&
+          'messageData' in data.body &&
+          'senderData' in data.body &&
+          'idMessage' in data.body &&
+          'timestamp' in data.body
+        ) {
+          const idMessage = data.body.idMessage;
+          const timestamp = data.body.timestamp;
+          const textMessage = data.body.messageData.textMessageData.textMessage;
+          const chatId = data.body.senderData.chatId;
+         
+          
+          if (
+            chatId === contact.id &&
+            !messages.some((message) => message.idMessage === idMessage)
+          ) {
+            const newMessage: ChatHistoryItem = {
+              type: 'incoming',
+              timestamp,
+              textMessage,
+              idMessage,
+            };
+            setMessages((prev) => [...prev, newMessage]);
+          }
+          await Api.notifications.deleteNotification(
+            instanceContext.registrationData,
+            data.receiptId,
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsFetchingNotification(false);
+      }
+    }
+
+    const id = setTimeout(fetchNotification, 4000);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFetchingNotification, contact, instanceContext?.registrationData]);
+
   async function handleSendMessage() {
     try {
       if (instanceContext?.registrationData && contact) {
@@ -48,7 +101,7 @@ export const ChatWindow = (props: ChatWindowProps) => {
           textMessage: currentMessageValue,
           idMessage: newMessageId,
         };
-        setMessages([...messages, newMessage]);
+        setMessages((prev) => [...prev, newMessage]);
         setCurrentMessageValue('');
       }
     } catch (error) {

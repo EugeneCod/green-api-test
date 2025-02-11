@@ -9,8 +9,6 @@ interface MessageListItemProps {
 export const MessageListItem = (props: MessageListItemProps) => {
   const { type, textMessage, timestamp } = props;
   const timeString = new Date(timestamp * 1000).toLocaleTimeString().slice(0, 5);
-  console.log(timestamp);
-  
 
   return (
     <li className={cn('flex justify-start px-6', { 'justify-end': type === 'outgoing' })}>
