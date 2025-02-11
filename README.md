@@ -1,6 +1,6 @@
 # Green-api-test
 
-[Ознакомительная ссылка](https://next-pizza-rouge.vercel.app/)
+[Ознакомительная ссылка](https://eugenecod.github.io/green-api-test/)
 
 ## :scroll: Описание
 
