@@ -32,7 +32,7 @@ export const ChatWindow = (props: ChatWindowProps) => {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
-  }, [messageListRef.current?.scrollHeight, contact]);
+  }, [contact]);
 
   useEffect(() => {
     if (instanceContext?.registrationData && contact) {
@@ -136,13 +136,13 @@ export const ChatWindow = (props: ChatWindowProps) => {
             </div>
           </header>
 
-          <div className='relative bg-[url(@/assets/images/chat-bg.png)] flex-auto before:content-[""] before:absolute before:inset-0 before:bg-chat-mask flex flex-col justify-end overflow-hidden'>
+          <div className='relative bg-[url(@/assets/images/chat-bg.png)] flex-auto before:content-[""] before:absolute before:inset-0 before:bg-chat-mask flex flex-col overflow-hidden'>
             <ul
               ref={messageListRef}
-              className="text-primary-txt z-10 flex flex-auto flex-col gap-y-1 pb-4 overflow-y-scroll scrollbar-custom">
+              className="text-primary-txt z-10 flex flex-auto flex-col-reverse gap-y-1 pb-4 overflow-y-scroll scrollbar-custom">
               {messages.map(({ idMessage, ...message }) => (
                 <MessageListItem key={idMessage} {...message} />
-              ))}
+              )).reverse()}
             </ul>
           </div>
           <ChatTextarea
