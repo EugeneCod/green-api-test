@@ -40,7 +40,6 @@ export const Contacts = (props: ContactsProps) => {
     return convertPhoneNumber(number);
   }, []); */
 
-  
   /* useEffect(() => {
     if (instanceContext?.registrationData) {
       Api.contacts
@@ -125,7 +124,7 @@ export const Contacts = (props: ContactsProps) => {
       </form>
 
       {/* Список контактов */}
-      <ul className="flex-auto overflow-y-scroll">
+      <ul className="flex-auto overflow-y-auto scrollbar-custom">
         {contacts.map((contact) => (
           <ContactListItem
             key={contact.id}

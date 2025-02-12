@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import deafaultUserAvatar from '@/assets/icons/default-user.svg';
 import { ChatTextarea, MessageListItem } from '@/components/shared';
@@ -25,8 +25,14 @@ export const ChatWindow = (props: ChatWindowProps) => {
   const [isFetchingNotification, setIsFetchingNotification] = useState(false);
 
   const instanceContext = useContext(InstanceContext);
-
   const urlAvatar = useContactUrlAvatar(instanceContext?.registrationData, contact?.id);
+  const messageListRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  }, [messageListRef.current?.scrollHeight, contact]);
 
   useEffect(() => {
     if (instanceContext?.registrationData && contact) {
@@ -114,10 +120,10 @@ export const ChatWindow = (props: ChatWindowProps) => {
   }
 
   return (
-    <section className="bg-secondary-bg border-l border-section-border h-screen flex flex-col justify-between overflow-y-scroll">
+    <section className="bg-secondary-bg border-l border-r border-section-border h-screen flex flex-col justify-between">
       {contact && (
         <>
-          <header className="py-3 px-4">
+          <header className="py-3 px-4 border-b border-section-border">
             <div className="flex items-center gap-x-2">
               <span className="w-12 h-12 rounded-[100%] bg-gray-600 flex items-center justify-center overflow-hidden">
                 <img
@@ -130,8 +136,10 @@ export const ChatWindow = (props: ChatWindowProps) => {
             </div>
           </header>
 
-          <div className='relative bg-[url(@/assets/images/chat-bg.png)] flex-auto before:content-[""] before:absolute before:inset-0 before:bg-chat-mask flex flex-col justify-end'>
-            <ul className="text-primary-txt z-10 flex flex-col gap-y-1 pb-4">
+          <div className='relative bg-[url(@/assets/images/chat-bg.png)] flex-auto before:content-[""] before:absolute before:inset-0 before:bg-chat-mask flex flex-col justify-end overflow-hidden'>
+            <ul
+              ref={messageListRef}
+              className="text-primary-txt z-10 flex flex-auto flex-col gap-y-1 pb-4 overflow-y-scroll scrollbar-custom">
               {messages.map(({ idMessage, ...message }) => (
                 <MessageListItem key={idMessage} {...message} />
               ))}

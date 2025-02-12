@@ -6,6 +6,19 @@
   /* --font-inter-sans: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
 }
 
+@utility scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: var(--root-scrollbar-thumb-color) transparent;
+}
+
+@utility scrollbar-gutter-both {
+  scrollbar-gutter: stable both-edges;
+}
+
+@utility scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
 @theme inline {
   --color-primary-txt: var(--root-primary-txt-color);
   --color-secondary-txt: var(--root-secondary-txt-color);
@@ -28,6 +41,8 @@
   --root-color-input: rgb(209, 215, 219);
   --root-message-in-bg-color: rgb(32, 44, 51);
   --root-message-out-bg-color: rgb(0, 92, 75);
+  /* --root-scrollbar-track-color: transparent; */
+  --root-scrollbar-thumb-color: rgba(255, 255, 255, 0.2);
 
   font-family: 'SF Pro Text', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
@@ -57,5 +72,6 @@ body {
     --root-color-input: rgb(59, 74, 84);
     --root-message-in-bg-color: rgb(255, 255, 255);
     --root-message-out-bg-color: rgb(217, 253, 211);
+    --root-scrollbar-thumb-color: rgba(0, 0, 0, 0.2);
   }
 }
