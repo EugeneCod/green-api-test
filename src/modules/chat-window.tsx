@@ -1,13 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
 
 import deafaultUserAvatar from '@/assets/icons/default-user.svg';
-import { cn } from '@/lib/utils/cn';
-
 import { ChatTextarea, MessageListItem } from '@/components/shared';
-import { BriefInfoContact, ChatHistoryItem } from '@/@types/green-api';
-import { useContactUrlAvatar } from '@/hooks';
 import { InstanceContext } from '@/contexts';
 import { Api } from '@/services/api-client';
+import { useContactUrlAvatar } from '@/hooks';
+import { cn } from '@/lib/utils/cn';
+import {
+  isIncomingMessageRecieved,
+  isIncomingTextMessage,
+  isNotificationWithData,
+} from '@/services/dto/notifications/predicates';
+
+import type { BriefInfoContact, ChatHistoryItem } from '@/@types/green-api';
 
 interface ChatWindowProps {
   contact: BriefInfoContact | null;
@@ -45,31 +50,30 @@ export const ChatWindow = (props: ChatWindowProps) => {
           instanceContext.registrationData,
           10,
         );
-        if (
-          data &&
-          'messageData' in data.body &&
-          'senderData' in data.body &&
-          'idMessage' in data.body &&
-          'timestamp' in data.body
-        ) {
-          const idMessage = data.body.idMessage;
-          const timestamp = data.body.timestamp;
-          const textMessage = data.body.messageData.textMessageData.textMessage;
-          const chatId = data.body.senderData.chatId;
-         
-          
+        if (isNotificationWithData(data)) {
           if (
-            chatId === contact.id &&
-            !messages.some((message) => message.idMessage === idMessage)
+            isIncomingMessageRecieved(data.body) &&
+            isIncomingTextMessage(data.body.messageData)
           ) {
-            const newMessage: ChatHistoryItem = {
-              type: 'incoming',
-              timestamp,
-              textMessage,
-              idMessage,
-            };
-            setMessages((prev) => [...prev, newMessage]);
+            const idMessage = data.body.idMessage;
+            const timestamp = data.body.timestamp;
+            const textMessage = data.body.messageData.textMessageData.textMessage;
+            const chatId = data.body.senderData.chatId;
+
+            if (
+              chatId === contact.id &&
+              !messages.some((message) => message.idMessage === idMessage)
+            ) {
+              const newMessage: ChatHistoryItem = {
+                type: 'incoming',
+                timestamp,
+                textMessage,
+                idMessage,
+              };
+              setMessages((prev) => [...prev, newMessage]);
+            }
           }
+
           await Api.notifications.deleteNotification(
             instanceContext.registrationData,
             data.receiptId,
